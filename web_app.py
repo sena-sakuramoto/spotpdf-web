@@ -230,24 +230,23 @@ def upload_files():
         if os.path.exists(results['output_path']):
             outputs_root_abs = os.path.abspath(OUTPUT_FOLDER)
             out_abs = os.path.abspath(results['output_path'])
-            sub_rel = os.path.relpath(out_abs, outputs_root_abs)
-            web_output_path = f"outputs/{sub_rel}"
+            sub_rel = os.path.relpath(out_abs, outputs_root_abs)  # e.g., "old_vs_new_20250101_120000"
 
-            # Map absolute file paths to relative URLs under /static
+            # Map to paths relative to OUTPUT_FOLDER for /download/<path>
             try:
                 diff_urls = []
                 for p in results.get('diff_images', []) or []:
                     b = os.path.basename(p)
-                    diff_urls.append(f"{web_output_path}/{b}")
+                    diff_urls.append(f"{sub_rel}/{b}")
                 results['diff_images'] = diff_urls
                 if results.get('summary_pdf'):
-                    results['summary_pdf'] = f"{web_output_path}/{os.path.basename(results['summary_pdf'])}"
+                    results['summary_pdf'] = f"{sub_rel}/{os.path.basename(results['summary_pdf'])}"
             except Exception as e:
                 logging.warning(f"Failed to remap result paths: {e}")
 
             return jsonify({
                 'success': True,
-                'output_path': web_output_path,
+                'output_path': sub_rel,
                 'results': results
             })
         else:
