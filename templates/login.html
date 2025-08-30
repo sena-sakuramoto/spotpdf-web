@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}ログイン - SpotPDF Web{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <h2 class="card-title mb-4">
+                    <i class="fas fa-file-pdf text-primary me-2"></i>
+                    SpotPDF Web
+                </h2>
+                <p class="text-muted mb-4">PDF差分比較ツール</p>
+                
+                <div id="g_id_onload"
+                     data-client_id="{{ config.GOOGLE_CLIENT_ID }}"
+                     data-callback="handleCredentialResponse">
+                </div>
+                <div class="g_id_signin" data-type="standard"></div>
+                
+                <div class="loading-spinner mt-3">
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">認証中...</span>
+                        </div>
+                    </div>
+                    <p class="mt-2">認証中...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">使用方法</h5>
+                <ol class="small">
+                    <li>Googleアカウントでログインしてください</li>
+                    <li>比較したい2つのPDFファイルをアップロードします</li>
+                    <li>差分設定を調整して比較を実行します</li>
+                    <li>結果をブラウザで確認または画像/PDFでダウンロードできます</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+    async function handleCredentialResponse(response) {
+        showLoading(true);
+        
+        try {
+            const result = await fetch('/auth/google', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ credential: response.credential })
+            });
+            
+            const data = await result.json();
+            
+            if (data.success) {
+                window.location.href = data.redirect;
+            } else {
+                showAlert(data.error || '認証に失敗しました');
+            }
+        } catch (error) {
+            showAlert('認証中にエラーが発生しました: ' + error.message);
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    // Load Google Client ID dynamically
+    fetch('/static/config.json')
+        .then(response => response.json())
+        .then(config => {
+            document.getElementById('g_id_onload').setAttribute('data-client_id', config.GoogleClientId);
+        })
+        .catch(error => {
+            console.error('Config loading failed:', error);
+        });
+</script>
+{% endblock %}

@@ -1,0 +1,81 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+web_app.log
+
+# Temporary files
+uploads/
+static/outputs/
+temp/
+tmp/
+
+# Configuration files with secrets
+GoogleLoginLauncher/SpotPDFLauncher.config.json
+client_service_account.json
+*.json.secret
+nul
+test_docu*.pdf
+
+# SSL certificates
+ssl/
+*.pem
+*.key
+*.crt
+
+# Docker
+.dockerignore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test outputs
+pixel_diff_output/
+practical_diff_output/
+SpotPDF_Output/
+
+# Built executables
+*.exe
+*.zip
+dist_tree.txt
+output.log
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment variables
+.env
+.env.local

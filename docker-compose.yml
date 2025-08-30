@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  spotpdf-web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./static/outputs:/app/static/outputs
+      - ./logs:/app/logs
+      - ./GoogleLoginLauncher/SpotPDFLauncher.config.json:/app/GoogleLoginLauncher/SpotPDFLauncher.config.json:ro
+      - ./client_service_account.json:/app/client_service_account.json:ro
+    environment:
+      - FLASK_ENV=production
+      - PYTHONPATH=/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - spotpdf-web
+    restart: unless-stopped

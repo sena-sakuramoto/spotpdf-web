@@ -1,0 +1,11 @@
+Flask==2.3.3
+Werkzeug==2.3.7
+PyMuPDF==1.23.5
+Pillow==10.0.0
+opencv-python==4.8.1.78
+numpy==1.24.3
+gspread==5.10.0
+google-auth==2.23.3
+google-auth-oauthlib==1.1.0
+google-auth-httplib2==0.1.1
+google-api-python-client==2.103.0
