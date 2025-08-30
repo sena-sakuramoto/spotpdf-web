@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     libxrender-dev \
     libgomp1 \
     libgthread-2.0-0 \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
@@ -34,7 +35,7 @@ EXPOSE 5000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:5000/status || exit 1
+    CMD curl -sf http://localhost:5000/status || exit 1
 
 # Run the application
 CMD ["python", "run_web.py"]

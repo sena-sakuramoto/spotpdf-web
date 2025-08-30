@@ -19,9 +19,19 @@ Web版のPDF差分比較アプリケーションです。デスクトップア�
 pip install -r requirements_web.txt
 ```
 
-### 2. 設定ファイル
+### 2. 設定（ファイル or 環境変数）
 
-既存の `GoogleLoginLauncher/SpotPDFLauncher.config.json` がそのまま使用されます。
+以下いずれかで設定できます。
+
+- 方式A: 環境変数（推奨/本番向け）
+  - `GOOGLE_CLIENT_ID`: Google Identity Services の Client ID
+  - `SERVICE_ACCOUNT_KEY_PATH`: サービスアカウント鍵ファイルのパス（コンテナ内）
+  - `SPREADSHEET_URL`: 許可ユーザー管理のスプレッドシートURL
+  - `SECRET_KEY`（任意）: Flaskセッション鍵
+
+- 方式B: 設定ファイル
+  - `GoogleLoginLauncher/SpotPDFLauncher.config.json`
+  - 上記が存在する場合は自動で読み込みます
 
 ### 3. アプリケーションの起動
 
@@ -108,7 +118,7 @@ docker-compose up -d
 
 ## セキュリティ機能
 
-- **レート制限**: アップロード・API呼び出しの頻度制限
+- **レート制限**: アップロード・API呼び出しの頻度制限（`/upload` は 2/min）
 - **ファイル制限**: PDFファイルのみ、最大50MB
 - **認証確認**: 各リクエストでセッション認証
 - **ユーザー管理**: Google Sheetsベースの認証ユーザー管理
@@ -145,8 +155,9 @@ docker-compose logs -f spotpdf-web
    - JSON形式の確認
 
 2. **認証エラー**
-   - Google Console でOAuth設定確認
-   - リダイレクトURIの設定確認
+   - Google Console でOAuth設定確認（Client ID）
+   - サービスアカウントをスプレッドシートに閲覧権限で共有
+   - リダイレクトURIの設定確認（GIS 使用時はフロントでIDトークンを発行）
 
 3. **ファイルアップロードエラー**
    - ファイルサイズ制限確認（デフォルト50MB）
@@ -155,6 +166,7 @@ docker-compose logs -f spotpdf-web
 4. **処理エラー**
    - ログファイル `web_app.log` 確認
    - PyMuPDF, OpenCVの依存関係確認
+   - アップロードサイズ（各50MB）制限超過の確認
 
 ### ログ確認
 
