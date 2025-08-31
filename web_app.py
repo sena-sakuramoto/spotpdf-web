@@ -29,7 +29,7 @@ except Exception:
 UPLOAD_FOLDER = 'uploads'
 OUTPUT_FOLDER = 'static/outputs'
 ALLOWED_EXTENSIONS = {'pdf'}
-MAX_FILE_SIZE = 50 * 1024 * 1024  # 50MB
+MAX_FILE_SIZE = int(os.getenv("MAX_FILE_SIZE_MB", "50")) * 1024 * 1024  # override by env MAX_FILE_SIZE_MB
 
 # Ensure directories exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -202,7 +202,7 @@ def upload_files():
 
         # Per-file size checks
         if os.path.getsize(old_path) > MAX_FILE_SIZE or os.path.getsize(new_path) > MAX_FILE_SIZE:
-            return jsonify({'error': 'File too large (max 50MB each)'}), 400
+            return jsonify({'error': ('File too large (max ' + [int](if (){}else{'50'}) + 'MB each)')}), 400
         
         # Get settings from request
         settings = {
