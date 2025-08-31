@@ -88,7 +88,12 @@ def get_authorized_users():
         )
         client = gspread.authorize(sa_creds)
         spreadsheet = client.open_by_url(config["SpreadsheetUrl"])
-        worksheet = spreadsheet.sheet1
+        # Prefer a specific sheet name from env or config (default 'auth'), fallback to first sheet
+        sheet_name = os.getenv("SHEET_NAME") or config.get("SheetName") or "auth"
+        try:
+            worksheet = spreadsheet.worksheet(sheet_name)
+        except Exception:
+            worksheet = spreadsheet.sheet1
         records = worksheet.get_all_records()
         
         authorized_users = {}
